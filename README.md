@@ -3,6 +3,7 @@
 I reviewed the Temp Stick API documentation at `https://tempstickapi.com/docs/#api-_header` and set up a small Node.js CLI that uses your existing `.env` key (`TEMP_STICK_API`).
 
 This gives you a safe place to:
+
 - Inspect sensors, alerts, and notifications
 - Pull readings
 - Configure sensor alert thresholds and intervals
@@ -12,18 +13,21 @@ This gives you a safe place to:
 ## What the API can do (documented endpoints)
 
 ### Alerts and notifications
+
 - Get all alerts: `GET /alerts/all`
 - Get a single alert: `GET /alerts/:alert_id`
 - Get sensor notifications (last 7 days): `GET /sensor/notifications/:sensorId`
 - Get user notifications (last 7 days): `GET /user/notifications`
 
 ### Sensors
+
 - Get all sensors: `GET /sensors/all`
 - Get a single sensor: `GET /sensor/:sensor_id`
 - Get readings for a sensor: `GET /sensor/:sensor_id/readings`
 - Update sensor settings: `POST /sensor/:sensor_id`
 
 ### User
+
 - Get current user: `GET /user`
 - Get email reports: `GET /user/email-reports`
 - Get allowed time zones: `GET /user/allowed-timezones`
@@ -73,6 +77,7 @@ Then open:
 - `http://localhost:8787`
 
 What you can do:
+
 - View all sensors, current temps, humidity, and online/offline status
 - Search sensors and hide offline units
 - Edit per-sensor ambient thresholds (and probe thresholds for EX sensors)
@@ -103,6 +108,7 @@ The most direct way to configure notifications via the API is the sensor setting
 - `POST /sensor/:sensor_id`
 
 Common alert-related fields include:
+
 - `alert_temp_above`
 - `alert_temp_below`
 - `alert_humidity_above`
@@ -124,12 +130,14 @@ node src/cli.js update-sensor SENSOR_ID \
 ```
 
 Notes:
+
 - The temperature values above are Celsius.
 - You can discover your `SENSOR_ID` with `node src/cli.js sensors`.
 
 ## Apply your fleet thresholds (34–60 probe, 34–90 ambient)
 
 I added a command that applies these thresholds across all sensors:
+
 - Probe sensors (EX): min 34 F, max 60 F
 - Ambient sensors: min 34 F, max 90 F
 
@@ -146,6 +154,7 @@ node src/cli.js apply-thresholds --apply
 ```
 
 The command converts Fahrenheit to Celsius for you:
+
 - 34 F → 1.11 C
 - 60 F → 15.56 C
 - 90 F → 32.22 C
@@ -158,7 +167,7 @@ Basic:
 node src/cli.js readings SENSOR_ID setting=24_hours
 ```
 
-Custom window:
+Custom window:d
 
 ```bash
 node src/cli.js readings SENSOR_ID \
@@ -188,5 +197,6 @@ node src/cli.js update-display timezone=America/New_York temp_pref=F
 ## Recommended next steps
 
 Good next moves:
+
 - Run `node src/cli.js sensors` and identify the specific sensors you want to configure.
 - Tell me the alert thresholds and intervals you want, and I can add a dedicated “apply-alerts” script that updates all sensors consistently.
