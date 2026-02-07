@@ -55,10 +55,11 @@ async function request(path, options = {}) {
   fetchOptions.signal = controller.signal;
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
+  let response;
+  let text;
   try {
-    const response = await fetch(url, fetchOptions);
-    clearTimeout(timeoutId);
-    const text = await response.text();
+    response = await fetch(url, fetchOptions);
+    text = await response.text();
   } catch (error) {
     clearTimeout(timeoutId);
     if (error.name === "AbortError") {
@@ -67,6 +68,8 @@ async function request(path, options = {}) {
       throw err;
     }
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   let data;
