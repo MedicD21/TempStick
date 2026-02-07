@@ -12,7 +12,11 @@ const state = {
 };
 
 function cToF(celsius, roundTo = 1) {
-  if (celsius === null || celsius === undefined || Number.isNaN(Number(celsius))) {
+  if (
+    celsius === null ||
+    celsius === undefined ||
+    Number.isNaN(Number(celsius))
+  ) {
     return null;
   }
   const fahrenheit = Number(celsius) * 1.8 + 32;
@@ -21,10 +25,14 @@ function cToF(celsius, roundTo = 1) {
 }
 
 function fToC(fahrenheit, roundTo = 2) {
-  if (fahrenheit === null || fahrenheit === undefined || Number.isNaN(Number(fahrenheit))) {
+  if (
+    fahrenheit === null ||
+    fahrenheit === undefined ||
+    Number.isNaN(Number(fahrenheit))
+  ) {
     return null;
   }
-  const celsius = (Number(fahrenheit) - 32) / 1.8;
+  const celsius = ((Number(fahrenheit) - 32) * 5) / 9;
   const factor = 10 ** roundTo;
   return Math.round(celsius * factor) / factor;
 }
@@ -106,13 +114,18 @@ function getProbeThresholdF(sensor, key) {
 
 function statusPill(sensor) {
   const offline = String(sensor.offline) === "1";
-  const cls = offline ? "status-pill status-pill--offline" : "status-pill status-pill--online";
+  const cls = offline
+    ? "status-pill status-pill--offline"
+    : "status-pill status-pill--online";
   const label = offline ? "Offline" : "Online";
   return `<span class="${cls}">${label}</span>`;
 }
 
 function sensorsFiltered() {
-  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+  const search = document
+    .getElementById("searchInput")
+    .value.trim()
+    .toLowerCase();
   const hideOffline = document.getElementById("hideOffline").checked;
 
   return state.sensors.filter((sensor) => {
@@ -182,7 +195,7 @@ function thermometerCardHtml({
     tempF,
     minF,
     maxF,
-    padF
+    padF,
   );
 
   const tubeHeightPx = 90;
@@ -197,7 +210,10 @@ function thermometerCardHtml({
     .filter(Boolean)
     .join(" ");
 
-  const thermometerClasses = ["thermometer", isAlert ? "thermometer--alert" : ""]
+  const thermometerClasses = [
+    "thermometer",
+    isAlert ? "thermometer--alert" : "",
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -216,8 +232,8 @@ function thermometerCardHtml({
       <div
         class="${thermometerClasses}"
         style="--fill-pct:${fillPct.toFixed(1)}; --min-pos:${minPosPx.toFixed(
-    1
-  )}px; --max-pos:${maxPosPx.toFixed(1)}px;"
+          1,
+        )}px; --max-pos:${maxPosPx.toFixed(1)}px;"
         aria-label="${label} thermometer"
       >
         <div class="thermometer__tube">
@@ -257,13 +273,17 @@ function renderSensors() {
         : null;
 
     const ambientMinF =
-      getAmbientThresholdF(sensor, "alert_temp_below") ?? BUSINESS_THRESHOLDS_F.ambient.min;
+      getAmbientThresholdF(sensor, "alert_temp_below") ??
+      BUSINESS_THRESHOLDS_F.ambient.min;
     const ambientMaxF =
-      getAmbientThresholdF(sensor, "alert_temp_above") ?? BUSINESS_THRESHOLDS_F.ambient.max;
+      getAmbientThresholdF(sensor, "alert_temp_above") ??
+      BUSINESS_THRESHOLDS_F.ambient.max;
     const probeMinF =
-      getProbeThresholdF(sensor, "minTcTemp") ?? BUSINESS_THRESHOLDS_F.probe.min;
+      getProbeThresholdF(sensor, "minTcTemp") ??
+      BUSINESS_THRESHOLDS_F.probe.min;
     const probeMaxF =
-      getProbeThresholdF(sensor, "maxTcTemp") ?? BUSINESS_THRESHOLDS_F.probe.max;
+      getProbeThresholdF(sensor, "maxTcTemp") ??
+      BUSINESS_THRESHOLDS_F.probe.max;
 
     const ambientMinC = fToC(ambientMinF, 2);
     const ambientMaxC = fToC(ambientMaxF, 2);
@@ -274,7 +294,9 @@ function renderSensors() {
       !offline && isOutOfRangeCelsius(ambientTempC, ambientMinC, ambientMaxC);
     const hasProbe = sensor.type === "EX" && Number.isFinite(probeTempC);
     const probeAlert =
-      hasProbe && !offline && isOutOfRangeCelsius(probeTempC, probeMinC, probeMaxC);
+      hasProbe &&
+      !offline &&
+      isOutOfRangeCelsius(probeTempC, probeMinC, probeMaxC);
     const rowAlert = ambientAlert || probeAlert;
 
     return {
@@ -298,7 +320,9 @@ function renderSensors() {
     if (a.rowAlert !== b.rowAlert) {
       return a.rowAlert ? -1 : 1;
     }
-    return a.displayName.localeCompare(b.displayName, undefined, { sensitivity: "base" });
+    return a.displayName.localeCompare(b.displayName, undefined, {
+      sensitivity: "base",
+    });
   });
 
   renderSensorsMeta(prepared.map((item) => item.sensor));
@@ -407,8 +431,12 @@ async function refreshAll() {
 
 function wireEvents() {
   document.getElementById("refreshBtn").addEventListener("click", refreshAll);
-  document.getElementById("searchInput").addEventListener("input", renderSensors);
-  document.getElementById("hideOffline").addEventListener("change", renderSensors);
+  document
+    .getElementById("searchInput")
+    .addEventListener("input", renderSensors);
+  document
+    .getElementById("hideOffline")
+    .addEventListener("change", renderSensors);
 
   document.querySelectorAll("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {

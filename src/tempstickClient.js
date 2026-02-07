@@ -7,7 +7,7 @@ const API_KEY = process.env.TEMP_STICK_API;
 
 if (!API_KEY) {
   throw new Error(
-    "Missing TEMP_STICK_API in environment. Add it to .env before running."
+    "Missing TEMP_STICK_API in environment. Add it to .env before running.",
   );
 }
 
@@ -23,6 +23,8 @@ function buildUrl(path, query) {
   }
   return url;
 }
+
+const TIMEOUT_MS = 30000; // 30 second timeout
 
 async function request(path, options = {}) {
   const { method = "GET", query, form } = options;
@@ -49,8 +51,23 @@ async function request(path, options = {}) {
     fetchOptions.body = formData;
   }
 
-  const response = await fetch(url, fetchOptions);
-  const text = await response.text();
+  const controller = new AbortController();
+  fetchOptions.signal = controller.signal;
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, fetchOptions);
+    clearTimeout(timeoutId);
+    const text = await response.text();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === "AbortError") {
+      const err = new Error(`Request timeout after ${TIMEOUT_MS}ms`);
+      err.status = 408;
+      throw err;
+    }
+    throw error;
+  }
 
   let data;
   try {
@@ -62,7 +79,7 @@ async function request(path, options = {}) {
   if (!response.ok) {
     const message = data?.message || response.statusText;
     const err = new Error(
-      `TempStick API error ${response.status}: ${message}`.trim()
+      `TempStick API error ${response.status}: ${message}`.trim(),
     );
     err.status = response.status;
     err.payload = data;

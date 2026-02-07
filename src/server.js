@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 const assetsDir = path.join(__dirname, "..", "assets");
 app.use("/assets", express.static(assetsDir));
 
-const imagesDir = path.join(__dirname, "..", "images");
+const imagesDir = path.join(__dirname, "..", "assets", "images");
 app.use("/images", express.static(imagesDir));
 
 function augmentSensor(sensor) {
@@ -71,7 +71,9 @@ app.get("/api/user", async (_req, res) => {
     const data = await getCurrentUser();
     res.json(data);
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -82,7 +84,9 @@ app.get("/api/sensors", async (_req, res) => {
     const augmented = items.map(augmentSensor);
     res.json({ ...data, data: { ...data.data, items: augmented } });
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -91,7 +95,9 @@ app.get("/api/alerts", async (_req, res) => {
     const data = await getAlerts();
     res.json(data);
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -101,7 +107,9 @@ app.get("/api/notifications", async (req, res) => {
     const data = await getUserNotifications({ items_per_page, page });
     res.json(data);
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -109,10 +117,15 @@ app.get("/api/sensor/:sensorId/notifications", async (req, res) => {
   try {
     const { sensorId } = req.params;
     const { items_per_page, page } = req.query;
-    const data = await getSensorNotifications(sensorId, { items_per_page, page });
+    const data = await getSensorNotifications(sensorId, {
+      items_per_page,
+      page,
+    });
     res.json(data);
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -128,7 +141,9 @@ app.get("/api/thresholds/plan", async (_req, res) => {
       planned_updates: plannedUpdates,
     });
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -161,7 +176,9 @@ app.post("/api/thresholds/apply", async (req, res) => {
       results,
     });
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 
@@ -175,7 +192,7 @@ app.post("/api/sensor/:sensorId", async (req, res) => {
     if (settings.alert_temp_below_f !== undefined) {
       settings.alert_temp_below = fahrenheitToCelsius(
         Number(settings.alert_temp_below_f),
-        2
+        2,
       );
       delete settings.alert_temp_below_f;
     }
@@ -183,7 +200,7 @@ app.post("/api/sensor/:sensorId", async (req, res) => {
     if (settings.alert_temp_above_f !== undefined) {
       settings.alert_temp_above = fahrenheitToCelsius(
         Number(settings.alert_temp_above_f),
-        2
+        2,
       );
       delete settings.alert_temp_above_f;
     }
@@ -201,7 +218,9 @@ app.post("/api/sensor/:sensorId", async (req, res) => {
     const data = await updateSensorSettings(sensorId, settings);
     res.json(data);
   } catch (error) {
-    res.status(error.status || 500).json(error.payload || { message: error.message });
+    res
+      .status(error.status || 500)
+      .json(error.payload || { message: error.message });
   }
 });
 

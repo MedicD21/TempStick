@@ -167,7 +167,7 @@ Basic:
 node src/cli.js readings SENSOR_ID setting=24_hours
 ```
 
-Custom window:d
+Custom window:
 
 ```bash
 node src/cli.js readings SENSOR_ID \
@@ -193,6 +193,49 @@ Then update:
 ```bash
 node src/cli.js update-display timezone=America/New_York temp_pref=F
 ```
+
+## GitHub Pages Deployment
+
+This project can be deployed to GitHub Pages for free hosting.
+
+### Setup
+
+1. **Add your API key to GitHub Secrets**:
+   - Go to your repository Settings → Secrets and variables → Actions
+   - Add a new secret named `TEMP_STICK_API` with your TempStick API key
+
+2. **Enable GitHub Pages**:
+   - Go to Settings → Pages
+   - Under "Source", select "GitHub Actions"
+
+3. **Push to main branch**:
+   - The workflow will automatically run and deploy your site
+
+### How it works
+
+- GitHub Pages hosts the static frontend files
+- A GitHub Action runs on each push to fetch fresh sensor data and regenerate `assets/data.json`
+- The dashboard displays data from this JSON file (no backend server needed)
+
+### Local Development
+
+To preview locally without the API:
+
+```bash
+npm install
+npm run dashboard  # Starts the Node.js server for local preview
+```
+
+Or generate data.json manually:
+
+```bash
+npm install
+node scripts/fetch-data.js  # Requires TEMP_STICK_API in .env
+```
+
+Then open `http://localhost:8787`.
+
+---
 
 ## Recommended next steps
 

@@ -27,9 +27,7 @@
           <h2 class="panel__title">Sensors</h2>
           <div class="panel__actions">
             <div class="filter-group" role="group" aria-label="Name filters">
-              <button class="filter-btn" data-filter="all">
-                All
-              </button>
+              <button class="filter-btn" data-filter="all">All</button>
               <button class="filter-btn filter-btn--active" data-filter="medic">
                 Medic
               </button>
@@ -57,8 +55,11 @@
     </main>
 
     <script>
-      // For GitHub Pages, set this to your hosted API server (no trailing slash).
-      // Example: window.API_BASE_URL = "https://your-domain.com"
+      // GitHub Pages Configuration:
+      // The site can be deployed statically to GitHub Pages.
+      // For live API data, set API_BASE_URL to your TempStick API server.
+      // Example: window.API_BASE_URL = "https://your-server.com";
+      // Leave empty to use the local assets/data.json file.
       window.API_BASE_URL = "";
     </script>
     <script src="assets/app.js" defer></script>
