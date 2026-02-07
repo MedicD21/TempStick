@@ -259,6 +259,7 @@ function thermometerCardHtml({
 
 function renderSensors() {
   const rows = document.getElementById("sensorsRows");
+  if (!rows) return;
 
   const filtered = sensorsFiltered();
 
@@ -407,9 +408,9 @@ async function loadSensors() {
       console.log("Extracted items:", items.length);
     } catch (error) {
       console.error("Error loading data.json:", error);
-      // Fall back to API if available locally.
-      const data = await fetchJson("/api/sensors");
-      items = data?.data?.items || [];
+      const rows = document.getElementById("sensorsRows");
+      rows.innerHTML = `<div class="muted">Error loading data: ${error.message}</div>`;
+      return;
     }
   } else {
     const data = await fetchJson("/api/sensors");
