@@ -410,9 +410,13 @@ async function loadSensors() {
 
   if (!API_BASE_URL) {
     try {
+      console.log("Loading from assets/data.json...");
       const snapshot = await fetchJson("assets/data.json");
+      console.log("Loaded data.json:", snapshot);
       items = snapshot?.items || [];
+      console.log("Extracted items:", items.length);
     } catch (error) {
+      console.error("Error loading data.json:", error);
       // Fall back to API if available locally.
       const data = await fetchJson("/api/sensors");
       items = data?.data?.items || [];
@@ -422,6 +426,7 @@ async function loadSensors() {
     items = data?.data?.items || [];
   }
 
+  console.log("Final items count:", items.length);
   state.sensors = items;
   renderSensors();
 }
