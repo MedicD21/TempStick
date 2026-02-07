@@ -426,7 +426,10 @@ async function refreshAll() {
 }
 
 function wireEvents() {
-  document.getElementById("refreshBtn").addEventListener("click", refreshAll);
+  const refreshBtn = document.getElementById("refreshBtn");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", refreshAll);
+  }
   document
     .getElementById("searchInput")
     .addEventListener("input", renderSensors);
