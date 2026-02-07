@@ -214,7 +214,7 @@ This project can be deployed to GitHub Pages for free hosting.
 ### How it works
 
 - GitHub Pages hosts the static frontend files
-- A GitHub Action runs on each push to fetch fresh sensor data and regenerate `assets/data.json`
+- A GitHub Action runs hourly and on every push to fetch fresh sensor data and regenerate `assets/data.json`
 - The dashboard displays data from this JSON file (no backend server needed)
 
 ### Local Development
